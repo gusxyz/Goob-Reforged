@@ -140,24 +140,7 @@ public static class ClientPackaging
             .ToHashSet();
 
         await RobustSharedPackaging.DoResourceCopy(Path.Combine(contentDir, "Resources"), pass, ignoreSet, cancel: cancel);
-        await DoModularResourceCopy(contentDir, pass, ignoreSet, cancel);
-    }
-
-    private static Task DoModularResourceCopy(
-        string contentDir,
-        AssetPass pass,
-        HashSet<string> ignoreSet,
-        CancellationToken cancel = default)
-    {
-        var dirs = Directory.GetDirectories(Path.Combine(contentDir, "Modules"));
-        foreach (var dir in dirs)
-        {
-            var resourcesPath = Path.Combine(dir, "Resources");
-            if (!Directory.Exists(resourcesPath))
-                continue;
-            RobustSharedPackaging.DoResourceCopy(resourcesPath, pass, ignoreSet, "", cancel);
-        }
-        return Task.CompletedTask;
+        await RobustSharedPackaging.DoModularResourceCopy(contentDir, pass, ignoreSet, cancel);
     }
 
     private static Task WriteClientContentAssemblies(
